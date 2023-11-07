@@ -8,12 +8,12 @@ function App() {
   const [darkMode, setDarkMode] = useState(true)
 
   return (
-    <div className="font-nunitoSans w-full bg-[rgb(250,250,250)] h-screen">
+    <div className={`${darkMode ? 'bg-[rgb(32,44,55)] text-white' : 'bg-[rgb(250,250,250)] text-[rgb(17,21,23)]'} font-nunitoSans w-full min-h-screen`}>
       <Router>
         <Header setDarkMode={setDarkMode} darkMode={darkMode}/>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="country/:id" element={<Country />} />
+          <Route path="/" element={<Home darkMode={darkMode} />} />
+          <Route path="country/:countryName" element={<Country darkMode={darkMode} />} />
         </Routes>
       </Router>
     </div>
