@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import data from '../data.json'
@@ -13,39 +13,58 @@ export default function Home ({darkMode}:darkType) {
     const [openFilter, setOpenFilter] = useState(false)
     const [regionChoice, setRegionChoice] = useState('')
     const [indexArray, setIndexArray] = useState<number[]>([])
-    const regions = ['Africa', 'America', 'Asia', 'Europe', 'Oceania']
+    const [countryList, setCountryList] = useState(data)
+
+    const  inputRef = useRef<HTMLInputElement>(null)
+
+    const regions = ['Africa', 'Americas', 'Asia', 'Europe', 'Oceania'];
 
     useEffect(() => {
         eightRandomCountries()
-    }, [])
+    }, [countryList])
 
     const handleRegion = (region: string) => {
         setOpenFilter(false)
         setRegionChoice(region)
+        setCountryList(data.filter((country) => country.region === region))
     }
     
     const eightRandomCountries = () => {
-        let countryIndexArray: number[] = []
+        let range = countryList.length
+        let countryIndexArray: number[] = [];
         let count = 8;
         while (count >= 1) {
-            countryIndexArray = [...countryIndexArray, (Math.floor(Math.random() * 250))]
-            count--
+            let randomNumber = (Math.floor(Math.random() * range))
+            if (countryIndexArray.includes(randomNumber)) {
+                continue
+            } else {
+                countryIndexArray = [...countryIndexArray, randomNumber]
+                count--
+            }
         }
         setIndexArray(countryIndexArray)
     }
+
+    const magnifyingGlassClick = () => {
+        if (text) {
+
+        } else {
+            inputRef.current!.focus()
+        }
+    }
     
     return (
-        <main className="mx-6 pb-12">
-            <section className="flex flex-col justify-between items-start gap-8 mt-6">
-            <input type="text" value={text} placeholder="Search for a country..." onChange={(e) => setText(e.target.value)} className={`${darkMode ? 'bg-[rgb(43,57,69)]' : 'bg-white'} text-xs w-full px-8 py-4 h-12 rounded-lg shadow`} />
+        <main className="mx-6 lg:mx-20 pb-12">
+            <section className="flex flex-col md:flex-row justify-between items-start gap-8 mt-6 lg:my-12">
+            <input ref={inputRef} type="text" value={text} placeholder="Search for a country..." onChange={(e) => setText(e.target.value)} className={`${darkMode ? 'bg-[rgb(43,57,69)]' : 'bg-white'} text-xs w-full md:w-[480px] px-8 py-4 h-12 lg:h-14 rounded-lg shadow`} />
             <div className="relative text-xs">
-                <button type="button" onClick={() => setOpenFilter(!openFilter)} className={`${darkMode ? 'bg-[rgb(43,57,69)]' : 'bg-white'} rounded-lg shadow h-12 w-[200px] flex justify-between items-center px-6`}>
-                    Filter by Region
-                    <FontAwesomeIcon icon={faAngleDown} />
+                <button type="button" onClick={() => setOpenFilter(!openFilter)} className={`${darkMode ? 'bg-[rgb(43,57,69)]' : 'bg-white'} rounded-lg shadow h-12 lg:h-14 w-[200px] flex justify-between items-center px-6`}>
+                    {regionChoice && !text ? regionChoice : 'Filter by Region'}
+                    <FontAwesomeIcon icon={faAngleDown} className={`${openFilter && 'rotate-180'}`} />
                 </button>
-                <div className={`${openFilter ? 'absolute top-full left-0' : 'hidden'} w-[200px] px-6 py-4 gap-2 flex flex-col items-start ${darkMode ? 'bg-[rgb(43,57,69)]' : 'bg-white '} mt-2 rounded-lg shadow`}>
+                <div className={`${openFilter ? 'absolute top-full left-0' : 'hidden'} w-[200px] px-6 py-4 gap-2 flex flex-col items-start ${darkMode ? 'bg-[rgb(43,57,69)]' : 'bg-white '} mt-2 rounded-lg shadow cursor-pointer w-full`}>
                     {regions.map((region) => (
-                        <button key={Math.random()} type="button" onClick={() => handleRegion(region)}>
+                        <button key={Math.random()} type="button" onClick={() => handleRegion(String(region))}>
                             {region}
                         </button>
                     ))}
@@ -53,19 +72,33 @@ export default function Home ({darkMode}:darkType) {
             </div>
             </section>
             <section className="">
-                <ul className="grid grid-cols-fluid gap-12 mt-12 p-6">
-                    {indexArray.map((index) => (
+                <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 lg:gap-y-12 lg:gap-x-6 2xl:gap-20 mt-12 mx-auto">
+                    {text.length < 1 ? countryList.map((country, i) => (
+                        indexArray.includes(i) &&
                         <li key={Math.random()} className="w-[264px] mx-auto rounded-b-lg shadow">
                             <Card 
-                                flag={data[index].flags.png}
-                                name={data[index].name}
-                                population={data[index].population}
-                                region={data[index].region}
-                                capital={data[index].capital}
+                                flag={country.flags.png}
+                                name={country.name}
+                                population={country.population}
+                                region={country.region}
+                                capital={country.capital}
                                 darkMode={darkMode}
                             />
                         </li>
-                    ))}
+                    ))
+                    : data.filter((country) => country.name.toLowerCase().slice(0,text.length) === text.toLowerCase()).map((country) => (
+                        <li key={Math.random()} className="w-[264px] mx-auto rounded-b-lg shadow">
+                            <Card 
+                                flag={country.flags.png}
+                                name={country.name}
+                                population={country.population}
+                                region={country.region}
+                                capital={country.capital}
+                                darkMode={darkMode}
+                            />
+                        </li>
+                    )).slice(0,8)
+                    }
                 </ul>
             </section>
         </main>
