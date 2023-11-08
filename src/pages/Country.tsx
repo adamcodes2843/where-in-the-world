@@ -15,7 +15,7 @@ export default function Country ({darkMode}:darkType) {
     let borderers = () => {
         let borderCountries = data.filter((country) => (
            borderArray?.includes(country.alpha3Code))
-        ).map((country) => (country.name))
+        ).map((country) => ({name: country.name, a3Code: country.alpha3Code}))
         return borderCountries
     }
 
@@ -47,7 +47,7 @@ export default function Country ({darkMode}:darkType) {
                         <h3 className="text-base font-semibold">Border Countries:</h3>
                         <div className="flex flex-wrap gap-2 my-2">
                             {borderers().map((borderCountry) => (
-                                <Link to={'/country/' + borderCountry} key={Math.random()} className={`${darkMode ? 'bg-[rgb(43,57,69)]' : 'bg-white'} rounded-lg shadow px-6 py-2 text-sm`}>{borderCountry}</Link>
+                                <Link to={'/country/' + borderCountry.a3Code} key={Math.random()} className={`${darkMode ? 'bg-[rgb(43,57,69)]' : 'bg-white'} rounded-lg shadow px-6 py-2 text-sm`}>{borderCountry.name}</Link>
                             )).splice(0,6)}
                         </div>
                     </div>
