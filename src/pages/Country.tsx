@@ -6,9 +6,8 @@ import { darkType } from "./Home"
 
 export default function Country ({darkMode}:darkType) {
     let {countryName} = useParams()
-    let findCountry = data.filter((country) => country.name === countryName)
+    let findCountry = data.filter((country) => country.alpha3Code == countryName)
     let country = findCountry[0]
-    console.log(country)
     let currencies = country?.currencies?.map((x) => x.name).join(', ')
     let languages = country?.languages?.map((x) => x.name).join(', ')
     let borderArray = country?.borders
@@ -21,7 +20,7 @@ export default function Country ({darkMode}:darkType) {
     }
 
     return (
-        <main className="mx-6 pt-6 lg:mx-20 text-sm md:text-base font-light">
+        <main className="mx-6 pt-6 md:mx-12 lg:mx-20 text-sm md:text-base font-light">
             <Link to={'/'} className={`${darkMode ? 'bg-[rgb(43,57,69)]' : 'bg-white'} rounded shadow font-light flex justify-center items-center w-[104px] lg:w-[136px] h-8 lg:h-10 mt-2 mb-12 lg:mt-16 lg:mb-24`}>
                 <FontAwesomeIcon icon={faArrowLeft} className="mr-4" />
                 Back
@@ -30,7 +29,7 @@ export default function Country ({darkMode}:darkType) {
                 <img src={country.flags.png} alt="country flag" className="rounded-lg max-w-[560px] max-h-[401px] lg:w-1/2" />
                 <div className="flex flex-col gap-8 lg:w-1/2 lg:justify-center">
                     <h2 className="font-extrabold text-[22px] lg:text-[32px] leading-10">{country.name.replace(/ *\([^)]*\) */g, "")}</h2>
-                    <div className="flex flex-col lg:flex-row gap-8">
+                    <div className="flex flex-col lg:flex-row gap-8 2xl:gap-24">
                     <ul className="flex flex-col gap-2">
                         <li><span className="font-semibold">Native Name: </span>{country.nativeName}</li>
                         <li><span className="font-semibold">Population: </span>{country.population.toLocaleString()}</li>
