@@ -1,6 +1,7 @@
 # Frontend Mentor
 
 Frontend Mentor challenges help you improve your coding skills by building realistic projects. 
+Live Site URL: [Add live site URL here](https://where-in-the-world-murex.vercel.app/)
 
 ## Table of contents
 
@@ -36,7 +37,7 @@ Check out the screenshots folder
 ### Links
 
 - Solution URL: [where-in-the-world](https://github.com/adamcodes2843/where-in-the-world)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Live Site URL: [Add live site URL here](https://where-in-the-world-murex.vercel.app/)
 
 ## My process
 
